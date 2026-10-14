@@ -1,0 +1,26 @@
+services:
+  moodle-postgres:
+    image: postgres:17
+    restart: always
+    environment:
+      POSTGRES_DB: moodle
+      POSTGRES_USER: moodleuser
+      POSTGRES_PASSWORD: moodlepassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  moodle-web:
+    build: .
+    restart: always
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+      - ../moodledata:/var/www/moodledata
+    depends_on:
+      - moodle-postgres
+
+volumes:
+  db_data:
